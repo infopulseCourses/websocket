@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<form>
+    <textarea id="received-messages"></textarea>
+
+    <br>
+    <label for="send-messages">Message</label>
+    <input type="text" id="send-messages">
+    <input type="button" value="Send" onclick="send()">
+</form>
+</body>
+<script>
+    var socket = new WebSocket('ws://127.0.0.1:8080/websock');
+    socket.onopen = function () {
+      alert("connect");
+    };
+    socket.onclose = function (event) {
+        if(event.wasClean){
+            alert('close');
+        }
+        else{
+            alert('error close');
+        }
+    };
+    socket.onerror = function (error) {
+        alert(error.message);
+    };
+    socket.onmessage = function (event) {
+        document.getElementById('received-messages').value = event.data;
+    };
+    function send() {
+        var message = document.getElementById('send-messages').value;
+        socket.send(message);
+    }
+</script>
+</html>
